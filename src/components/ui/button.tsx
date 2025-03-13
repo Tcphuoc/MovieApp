@@ -1,5 +1,5 @@
-export default function Button({ children, className }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={className}>
+export default function Button({ children, className, type }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return <button className={className} type={type}>
     {children}
   </button>
 }

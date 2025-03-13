@@ -45,3 +45,11 @@ h4 {
 .text-primary {
   color: var(--primary-color);
 }
+
+.btn-primary {
+  color: var(--foreground);
+  background-color: var(--primary-color);
+  &:hover {
+    background-color: #C11119;
+  }
+}

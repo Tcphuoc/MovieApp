@@ -1,0 +1,12 @@
+.background-signin {
+  background-image: url("@/assets/images/background.jpg") !important;
+  background-size: cover;
+  background-position: center;
+  height: calc(100vh + 100px);
+  width: 100%;
+  opacity: 30%;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
