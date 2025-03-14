@@ -4,6 +4,7 @@
   --background: #171717;
   --foreground: #ffffff;
   --primary-color: #e50914;
+  --full-height: calc(100vh + 100px);
 }
 
 @theme inline {
@@ -52,4 +53,12 @@ h4 {
   &:hover {
     background-color: #C11119;
   }
+}
+
+.bg-red {
+  background-color: var(--primary-color);
+}
+
+.h-full-screen {
+  height: var(--full-height);
 }

@@ -15,10 +15,12 @@ export default function Modal({ children }: { children: React.ReactNode }) {
 
   if (!modal) return;
 
-  return createPortal(<div className="absolute w-full h-full flex items-center justify-center">
-    <div className="absolute bg-black opacity-50 w-full h-full"></div>
-    <div className="z-10">
-      { children }
+  return createPortal((
+    <div className="absolute w-full h-full-screen flex items-center justify-center">
+      <div className="absolute bg-black opacity-50 w-full h-full"></div>
+      <div className="z-10">
+        { children }
+      </div>
     </div>
-  </div>, modal);
+  ), modal);
 }

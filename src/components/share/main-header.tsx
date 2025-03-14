@@ -58,7 +58,7 @@ export default function MainHeader({ isTransparent, isShowBar }: MainHeaderProps
           </ul>
         )}
       </div>
-      {isShow && (
+      {isShow ? (
         <ul className="flex items-center">
           <li>
             <button className="w-8 ml-4">
@@ -74,6 +74,14 @@ export default function MainHeader({ isTransparent, isShowBar }: MainHeaderProps
             <button className="w-8 ml-4">
               <Image src={userIcon} alt="notification icon" />
             </button>
+          </li>
+        </ul>
+      ) : (
+        <ul className="flex items-center">
+          <li>
+              <button className="hover:text-gray-200 ml-4">
+                <Link href="/signin">Sign in / Sign up</Link>
+              </button>
           </li>
         </ul>
       )}
