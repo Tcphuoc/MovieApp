@@ -1,19 +1,11 @@
 export interface SigninParams {
-  account: string;
+  email: string;
   password: string;
-}
-
-export interface SiginResponse {
-  access_token: string;
-  refresh_token: string;
 }
 
 export interface SignupParams {
   first_name: string;
   last_name: string;
-  account: string;
+  email: string;
   password: string;
-  password_confirmation: string;
 }
-
-export type SignupResponse = unknown;

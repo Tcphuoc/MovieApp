@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import MainHeader from "@/components/share/main-header";
 import AuthGuard from "@/components/share/auth-guard";
+import Container from "@/components/ui/container";
 
 export const metadata: Metadata = {
   title: "Home - Movie App",
@@ -15,7 +16,9 @@ export default function MainLayout({
   return (
     <AuthGuard>
       <MainHeader isTransparent={false} isShowBar={true} />
-      {children}
+      <Container>
+        {children}
+      </Container>
     </AuthGuard>
   );
 }

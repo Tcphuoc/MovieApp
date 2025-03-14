@@ -17,9 +17,8 @@ const initialState: AuthState = {
 
 interface LoginSuccessAction {
   accessToken: string;
+  expiredTime: number;
 }
-
-const expiredTime: number = 60 * 60 * 24;
 
 export const loadUserFromLocal = createAsyncThunk(
   'auth/loadUserFromLocal',
@@ -33,7 +32,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action: PayloadAction<LoginSuccessAction>) {
-      const { accessToken } = action.payload;
+      const { accessToken, expiredTime } = action.payload;
       if (accessToken) {
         setCookie('accessToken', accessToken, { maxAge: expiredTime });
         state.accessToken = accessToken;
@@ -45,15 +44,6 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       deleteCookie('accessToken');
     },
-    // loadUserFromLocal(state) {
-    //   getCookieInfo().then((data) => {
-    //     // state.isLoading = false;
-    //     if (data.accessToken) {
-    //       state.accessToken = data.accessToken;
-    //       state.isAuthenticated = true;
-    //     }
-    //   });
-    // }
   },
   extraReducers: (builder) => {
     builder

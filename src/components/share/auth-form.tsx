@@ -13,7 +13,7 @@ import Input from "@/components/ui/input";
 import Alert from "@/components/ui/alert";
 
 interface SigninErrors {
-  accountError: string;
+  emailError: string;
   passwordError: string;
   apiError: string;
 }
@@ -25,7 +25,7 @@ interface SignupErrors extends SigninErrors {
 }
 
 const DEFAULT_SIGNIN_ERRORS: SigninErrors = {
-  accountError: "",
+  emailError: "",
   passwordError: "",
   apiError: "",
 }
@@ -33,14 +33,14 @@ const DEFAULT_SIGNIN_ERRORS: SigninErrors = {
 const DEFAULT_SIGNUP_ERRORS: SignupErrors = {
   firstNameError: "",
   lastNameError: "",
-  accountError: "",
+  emailError: "",
   passwordError: "",
   passwordConfirmError: "",
   apiError: "",
 }
 
 interface SigninData {
-  account: string;
+  email: string;
   password: string;
 }
 
@@ -51,14 +51,14 @@ interface SignupData extends SigninData {
 }
 
 const DEFAULT_SIGNIN_DATA: SigninData = {
-  account: "",
+  email: "",
   password: "",
 }
 
 const DEFAULT_SIGNUP_DATA: SignupData = {
   firstName: "",
   lastName: "",
-  account: "",
+  email: "",
   password: "",
   passwordConfirm: "",
 }
@@ -76,9 +76,9 @@ export default function AuthForm({ isSignin }: { isSignin: boolean }) {
   async function signinHandler(formData: FormData) {
     const errors: SigninErrors = {...DEFAULT_SIGNIN_ERRORS};
 
-    const account: string = formData.get('account') as string;
-    if (account.length === 0) {
-      errors.accountError = ERROR_MSG.account;
+    const email: string = formData.get('email') as string;
+    if (email.length === 0) {
+      errors.emailError = ERROR_MSG.email;
     }
 
     const password: string = formData.get('password') as string;
@@ -87,21 +87,21 @@ export default function AuthForm({ isSignin }: { isSignin: boolean }) {
     }
 
     setSigninErrors({ ...errors });
-    setSigninData({ account, password });
-    if (errors.accountError || errors.passwordError) return;
+    setSigninData({ email, password });
+    if (errors.emailError || errors.passwordError) return;
 
     try {
-      const result = await signin({ account, password });
-      if (!result) throw new Error("No response");
+      const session = await signin({ email, password });
+      if (!session) throw new Error(ERROR_MSG.failed_auth);
 
-      dispatch(login({ accessToken: result.accessToken }));
+      dispatch(login({ accessToken: session.access_token, expiredTime: session.expires_in }));
       route.push("/");
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);
         setShowAlert(true);
         setSigninErrors((prev) => {
-          return { ...prev, apiError: "Sign in failed" };
+          return { ...prev, apiError: error.message };
         })
       }
     }
@@ -120,9 +120,9 @@ export default function AuthForm({ isSignin }: { isSignin: boolean }) {
       errors.lastNameError = ERROR_MSG.last_name;
     }
 
-    const account: string = formData.get('account') as string;
-    if (account.length === 0) {
-      errors.accountError = ERROR_MSG.account;
+    const email: string = formData.get('email') as string;
+    if (email.length === 0) {
+      errors.emailError = ERROR_MSG.email;
     }
 
     const password: string = formData.get('password') as string;
@@ -136,18 +136,21 @@ export default function AuthForm({ isSignin }: { isSignin: boolean }) {
     }
 
     setSignupErrors({ ...errors });
-    setSignupData({ firstName, lastName, account, password, passwordConfirm });
-    if (errors.firstNameError || errors.lastNameError || errors.accountError || errors.passwordError || errors.passwordConfirmError) return;
+    setSignupData({ firstName, lastName, email, password, passwordConfirm });
+    if (errors.firstNameError || errors.lastNameError || errors.emailError || errors.passwordError || errors.passwordConfirmError) return;
 
     try {
-      await signup({ account, password, first_name: firstName, last_name: lastName, password_confirmation: passwordConfirm });
-      route.push("/signin");
+      const session = await signup({ email, password, first_name: firstName, last_name: lastName });
+      if (!session) throw new Error(ERROR_MSG.failed_signup);
+
+      dispatch(login({ accessToken: session.access_token, expiredTime: session.expires_in }));
+      route.push("/");
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);
         setShowAlert(true);
         setSignupErrors((prev) => {
-          return { ...prev, apiError: "Sign up failed" };
+          return { ...prev, apiError: error.message };
         })
       }
     }
@@ -156,7 +159,7 @@ export default function AuthForm({ isSignin }: { isSignin: boolean }) {
   return <section>
     {showAlert && (
       <Alert onClose={() => setShowAlert(false)}>
-        <p>{ signinErrors.apiError || signupErrors.apiError }</p>
+        <p className="mb-10">{ signinErrors.apiError || signupErrors.apiError }</p>
       </Alert>
     )}
     <div className="bg-black w-130 py-15 px-20 mx-auto rounded-md">
@@ -184,11 +187,11 @@ export default function AuthForm({ isSignin }: { isSignin: boolean }) {
         )}
         <Input
           label="Email or mobile number"
-          id="account"
+          id="email"
           type="text"
           className="my-5"
-          error={isSignin ? signinErrors.accountError : signupErrors.accountError}
-          defaultValue={isSignin ? signinData.account : signupData.account}
+          error={isSignin ? signinErrors.emailError : signupErrors.emailError}
+          defaultValue={isSignin ? signinData.email : signupData.email}
         />
         <Input
           label="Password"
@@ -217,7 +220,7 @@ export default function AuthForm({ isSignin }: { isSignin: boolean }) {
         </div>
       ) : (
         <div className="flex">
-          <p>Have an exist account?</p>
+          <p>Have an exist email?</p>
           <Link className="font-bold text-white ml-2 hover:underline" href="/signin">Sign in.</Link>
         </div>
       )}
