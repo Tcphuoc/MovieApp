@@ -5,6 +5,7 @@
   --foreground: #ffffff;
   --primary-color: #e50914;
   --full-height: calc(100vh + 100px);
+  --hover-color: #C11119;
 }
 
 @theme inline {

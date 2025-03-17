@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MainHeader from "@/components/share/main-header";
+import MainHeader from "@/components/share/main-header/main-header";
 import AuthGuard from "@/components/share/auth-guard";
 import Container from "@/components/ui/container";
 
