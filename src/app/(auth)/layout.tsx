@@ -1,4 +1,4 @@
-import MainHeader from "@/components/share/main-header/main-header";
+import MainHeader from "@/components/share/mainHeader";
 import classes from "./layout.module.css";
 import Container from "@/components/ui/container";
 

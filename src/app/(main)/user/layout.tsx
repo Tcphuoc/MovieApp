@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AccountNavbar from "@/features/user/accountNavbar";
 
 export const metadata: Metadata = {
   title: "Account - Movie App",
@@ -10,10 +11,10 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="flex">
-    <div>
-      <p>Hello</p>
+  return (
+    <div className="flex">
+      <AccountNavbar className="mr-10" />
+      {children}
     </div>
-    {children}
-  </div>;
+  );
 }

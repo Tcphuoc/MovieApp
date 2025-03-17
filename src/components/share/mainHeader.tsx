@@ -1,32 +1,34 @@
 "use client";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { RootState } from "@/lib/store";
 import logoImage from "@/app/icon.svg";
-import Container from "../../ui/container";
-import classes from "./main-header.module.css";
+import Container from "../ui/container";
 import { AuthState } from "@/lib/store/authSlice";
 import Dropdown from "@/components/ui/dropdown"
 import { Logout, Person, Notifications, Search } from "@mui/icons-material";
+import { logout } from "@/lib/store/authSlice";
 
 interface MainHeaderProps {
   isTransparent: boolean;
   isShowBar: boolean;
 }
 
-const USER_INFO_ITEMS = [
-  { url: '/user/update', name: 'Account' },
-  { url: '/', name: 'Sign out', icon: <Logout sx={{color: "white"}} /> }
-]
-
 export default function MainHeader({ isTransparent, isShowBar }: MainHeaderProps) {
   const [isShow, setIsShow] = useState<boolean>(isShowBar);
   const authState: AuthState = useSelector((state: RootState) => state.auth);
   const { isAuthenticated, isLoading } = authState;
+
+  const dispatch = useDispatch();
+
+  const USER_INFO_ITEMS = [
+    { url: '/user/profile', name: 'Account' },
+    { name: 'Sign out', icon: <Logout sx={{color: "white"}} />, onClick: () => {dispatch(logout())} }
+  ]
 
   useEffect(() => {
     if (!isShowBar) return;
@@ -36,7 +38,7 @@ export default function MainHeader({ isTransparent, isShowBar }: MainHeaderProps
     }
   }, [isAuthenticated, isLoading, isShowBar])
 
-  return <Container className={isTransparent ? 'bg-none' : classes['default-background'] }>
+  return <Container className={isTransparent ? 'bg-none' : 'bg-default' }>
     <header className={"flex justify-between"}>
       <div className="flex items-center">
         <Link className="flex items-center text-primary font-bold mr-10" href="/">

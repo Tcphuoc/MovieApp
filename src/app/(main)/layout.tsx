@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import MainHeader from "@/components/share/main-header/main-header";
-import AuthGuard from "@/components/share/auth-guard";
+import MainHeader from "@/components/share/mainHeader";
+import AuthGuard from "@/components/share/authGuard";
 import Container from "@/components/ui/container";
 
 export const metadata: Metadata = {
@@ -15,10 +15,9 @@ export default function MainLayout({
 }>) {
   return (
     <AuthGuard>
+      <div id="main_alert"></div>
       <MainHeader isTransparent={false} isShowBar={true} />
-      <Container>
-        {children}
-      </Container>
+      <Container>{children}</Container>
     </AuthGuard>
   );
 }

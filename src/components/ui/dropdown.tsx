@@ -5,9 +5,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface ItemProps {
-  url: string;
+  url?: string;
   name: string;
   icon?: React.ReactNode;
+  onClick?: () => void;
 }
 
 type DropdownProps = {
@@ -26,6 +27,14 @@ export default function Dropdown({id, className, items, children}: DropdownProps
   function handleNavigate(url: string) {
     setAnchorEl(null);
     route.push(url);
+  }
+
+  function handleClick({url, onClick}: {url?: string, onClick?: () => void}) {
+    if (url) {
+      return handleNavigate(url);
+    } else if (onClick) {
+      onClick();
+    }
   }
 
   return <div>
@@ -52,8 +61,8 @@ export default function Dropdown({id, className, items, children}: DropdownProps
         }
       }}
     >
-      {items.map(({ url, name, icon }, i) => {
-        return <MenuItem className="w-50 text-white" key={i} onClick={() => handleNavigate(url)}>
+      {items.map(({ name, icon, ...props }, i) => {
+        return <MenuItem className="w-50 text-white" key={i} onClick={() => handleClick(props)}>
           {icon && <ListItemIcon>{icon}</ListItemIcon>}
           <ListItemText>{name}</ListItemText>
         </MenuItem>

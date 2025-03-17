@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { setCookie, deleteCookie, getCookie } from "cookies-next";
+import { getUserByToken } from "../api/services/user";
 
 export interface AuthState {
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
   isLoading: boolean;
+  currentUserId: string | null;
 }
 
 const initialState: AuthState = {
@@ -13,17 +15,23 @@ const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
   isLoading: true,
+  currentUserId: null,
 }
 
 interface LoginSuccessAction {
   accessToken: string;
   expiredTime: number;
+  id: string;
 }
 
 export const loadUserFromLocal = createAsyncThunk(
   'auth/loadUserFromLocal',
   async () => {
-    return await getCookie('accessToken');
+    const accessToken = await getCookie('accessToken');
+    if (!accessToken) return { accessToken: null };
+
+    const user = await getUserByToken(accessToken);
+    return { accessToken, currentUserId: user.id };
   }
 )
 
@@ -32,16 +40,18 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state, action: PayloadAction<LoginSuccessAction>) {
-      const { accessToken, expiredTime } = action.payload;
+      const { accessToken, expiredTime, id } = action.payload;
       if (accessToken) {
         setCookie('accessToken', accessToken, { maxAge: expiredTime });
         state.accessToken = accessToken;
         state.isAuthenticated = true;
+        state.currentUserId = id;
       }
     },
     logout(state) {
       state.accessToken = null;
       state.isAuthenticated = false;
+      state.currentUserId = null;
       deleteCookie('accessToken');
     },
   },
@@ -54,7 +64,8 @@ const authSlice = createSlice({
         state.isLoading = false;
         if (action.payload) {
           state.isAuthenticated = true;
-          state.accessToken = action.payload
+          state.accessToken = action.payload.accessToken
+          state.currentUserId = action.payload.currentUserId ?? null
         }
       })
   }

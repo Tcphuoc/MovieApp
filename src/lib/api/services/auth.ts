@@ -9,7 +9,7 @@ async function signin(payload: AuthParams) {
   const { data, error } = response;
   if (error) throw new Error(ERROR_MSG.failed_auth);
 
-  return data.session;
+  return data;
 }
 
 async function signup(payload: AuthParams) {
@@ -29,7 +29,7 @@ async function signup(payload: AuthParams) {
   const { data, error } = response;
   if (error) throw new Error(error.message);
 
-  return data.session;
+  return data;
 }
 
 export { signin, signup };
