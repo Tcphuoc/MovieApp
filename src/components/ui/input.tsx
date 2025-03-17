@@ -1,12 +1,28 @@
-type InputProps = {
-  label: string,
-  error: string,
-} & React.InputHTMLAttributes<HTMLInputElement>
+import { TextField, styled, TextFieldProps } from "@mui/material";
 
-export default function Input({ label, id, className, error, ...props }: InputProps) {
-  return <div className={`flex flex-col ${className}`}>
-    <label htmlFor={id}>{label}</label>
-    <input id={id} name={id} className={`border-1 p-2 rounded-md ${error ? 'border-red-700' : undefined}`} {...props} />
-    {error && <p className="text-red-700 text-xs">{ error }</p>}
+const WhiteTextField = styled(TextField)({
+  "& .MuiOutlinedInput-root": {
+    color: "white",
+    "& fieldset": {
+      borderColor: "white",
+    },
+    "&:hover fieldset": {
+      borderColor: "white",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "white",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "white",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "white",
+  },
+});
+
+export default function CustomInput({ className, ...props }: TextFieldProps) {
+  return <div className={className}>
+    <WhiteTextField {...props} name={props.id} className="w-full" variant="outlined" />
   </div>
 }

@@ -1,5 +1,13 @@
-export default function Button({ children, className, type, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button className={className} type={type} {...props}>
-    {children}
-  </button>
+import { Button, ButtonProps } from "@mui/material"
+
+export default function CustomButton({ children, className, ...props }: ButtonProps) {
+  return <div className={className}>
+    <Button
+      className="w-full"
+      variant="contained"
+      {...props}
+    >
+      {children}
+    </Button>
+  </div>
 }

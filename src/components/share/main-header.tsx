@@ -3,7 +3,7 @@
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { RootState } from "@/lib/store";
 import logoImage from "@/app/icon.svg";
@@ -13,15 +13,67 @@ import searchIcon from "@/assets/icon/search.svg";
 import notiIcon from "@/assets/icon/notification.svg";
 import userIcon from "@/assets/icon/user.svg";
 import { AuthState } from "@/lib/store/authSlice";
+import Button from "../ui/button";
 
 interface MainHeaderProps {
   isTransparent: boolean;
   isShowBar: boolean;
 }
 
+function UserInfo() {
+  const [showUserInfo, setShowUserInfo] = useState<boolean>(false);
+  const userInfoRef = useRef<HTMLDivElement | null>(null);
+  console.log(showUserInfo);
+
+  function closeUserInfo() {
+    setShowUserInfo(false)
+  }
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (userInfoRef.current && !userInfoRef.current.contains(event.target as Node)) {
+        closeUserInfo();
+      }
+    }
+
+    if (showUserInfo) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showUserInfo]);
+
+  return <>
+    <li>
+      <button className="w-8 ml-4 relative" onClick={() => setShowUserInfo((prev:boolean) => !prev)}>
+        <Image src={userIcon} alt="notification icon" />
+      </button>
+    </li>
+    {showUserInfo && (
+      <div
+        ref={userInfoRef}
+        className="absolute w-50 z-10 bg-gray-100 px-4 py-2 translate-y-full right-12 rounded"
+        tabIndex={0}
+      >
+        <ul>
+          <li>
+            <Link href="/user/update" className="text-black" onClick={closeUserInfo}>User info</Link>
+          </li>
+          <li>
+            <Button className="text-black hover:cursor-pointer" type="button" onClick={closeUserInfo}>Sign out</Button>
+          </li>
+        </ul>
+      </div>
+    )}
+  </>
+}
+
 export default function MainHeader({ isTransparent, isShowBar }: MainHeaderProps) {
   const [isShow, setIsShow] = useState<boolean>(isShowBar);
-
   const authState: AuthState = useSelector((state: RootState) => state.auth);
   const { isAuthenticated, isLoading } = authState;
 
@@ -59,23 +111,22 @@ export default function MainHeader({ isTransparent, isShowBar }: MainHeaderProps
         )}
       </div>
       {isShow ? (
-        <ul className="flex items-center">
-          <li>
-            <button className="w-8 ml-4">
-              <Image src={searchIcon} alt="search icon" />
-            </button>
-          </li>
-          <li>
-            <button className="w-8 ml-4">
-              <Image src={notiIcon} alt="notification icon" />
-            </button>
-          </li>
-          <li>
-            <button className="w-8 ml-4">
-              <Image src={userIcon} alt="notification icon" />
-            </button>
-          </li>
-        </ul>
+        <>
+          <ul className="flex items-center">
+            <li>
+              <button className="w-8 ml-4">
+                <Image src={searchIcon} alt="search icon" />
+              </button>
+            </li>
+            <li>
+              <button className="w-8 ml-4">
+                <Image src={notiIcon} alt="notification icon" />
+              </button>
+            </li>
+            <UserInfo />
+          </ul>
+
+        </>
       ) : (
         <ul className="flex items-center">
           <li>

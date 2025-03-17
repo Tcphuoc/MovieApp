@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
 import { AuthState, loadUserFromLocal } from "@/lib/store/authSlice";
 import { useRouter } from "next/navigation";
-import Modal from "../ui/modal";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const route = useRouter();
@@ -26,16 +25,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [isLoading, isAuthenticated, route]);
 
-  if (isLoading) {
-    return <>
-      <Modal>
-        <div className="bg-dark">
-          <p>Loading...</p>
-        </div>
-      </Modal>
-      {children}
-    </>;
-  }
-
-  return <>{children}</>;
+  return <>
+    {children}
+  </>;
 }

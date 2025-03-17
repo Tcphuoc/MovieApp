@@ -1,13 +1,8 @@
-import { SigninParams, SignupParams } from "../models/Auth";
+import { AuthParams } from "../models/Auth";
 import { supabaseClient } from "@/utils/supabase";
 import { ERROR_MSG } from "@/lib/constant/error";
 
-// async function signup(payload: SignupParams) {
-//   await POST<SignupParams, SignupResponse>({ payload, endpoint: "auth/signup" });
-//   return;
-// }
-
-async function signin(payload: SigninParams) {
+async function signin(payload: AuthParams) {
   const response = await supabaseClient?.auth.signInWithPassword(payload)
   if (!response) throw new Error(ERROR_MSG.no_response);
 
@@ -17,14 +12,14 @@ async function signin(payload: SigninParams) {
   return data.session;
 }
 
-async function signup(payload: SignupParams) {
+async function signup(payload: AuthParams) {
   const response = await supabaseClient?.auth.signUp({
     email: payload.email,
     password: payload.password,
     options: {
       data: {
-        first_name: payload.first_name,
-        last_name: payload.last_name,
+        first_name: payload.firstName,
+        last_name: payload.lastName,
       }
     }
   })
