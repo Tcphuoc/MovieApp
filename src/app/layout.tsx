@@ -1,9 +1,6 @@
-"use client";
-
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { store } from "@/lib/store";
-import { Provider } from "react-redux";
+import StateProvider from "./stateProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,9 +23,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div id="modal"></div>
-        <Provider store={store}>
-          {children}
-        </Provider>
+        <StateProvider>{children}</StateProvider>
       </body>
     </html>
   );

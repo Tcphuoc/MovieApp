@@ -27,11 +27,18 @@ interface LoginSuccessAction {
 export const loadUserFromLocal = createAsyncThunk(
   'auth/loadUserFromLocal',
   async () => {
-    const accessToken = await getCookie('accessToken');
-    if (!accessToken) return { accessToken: null };
+    try {
+      const accessToken = await getCookie('accessToken');
+      if (!accessToken) return { accessToken: null };
 
-    const user = await getUserByToken(accessToken);
-    return { accessToken, currentUserId: user.id };
+      const user = await getUserByToken();
+      return { accessToken, currentUserId: user.id };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
+      return { accessToken: null };
+    }
   }
 )
 
@@ -62,11 +69,9 @@ const authSlice = createSlice({
       })
       .addCase(loadUserFromLocal.fulfilled, (state, action) => {
         state.isLoading = false;
-        if (action.payload) {
-          state.isAuthenticated = true;
-          state.accessToken = action.payload.accessToken
-          state.currentUserId = action.payload.currentUserId ?? null
-        }
+        state.isAuthenticated = !!action.payload.accessToken;
+        state.accessToken = action.payload.accessToken
+        state.currentUserId = action.payload.currentUserId ?? null
       })
   }
 })

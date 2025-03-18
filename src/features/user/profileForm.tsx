@@ -3,9 +3,6 @@
 import { useEffect, useState } from "react";
 import { ERROR_MSG } from "@/lib/constant/error";
 
-import { RootState } from "@/lib/store";
-import { useSelector } from "react-redux";
-import { AuthState } from "@/lib/store/authSlice";
 import { getUserByToken } from "@/lib/api/services/user";
 import CustomButton from "@/components/ui/customButton";
 import Input from "@/components/ui/input";
@@ -51,28 +48,24 @@ export default function ProfileForm() {
   const [profileData, setProfileData] =
     useState<FormProps>(DEFAULT_PROFILE_FORM);
   const { data: formData, errors: formErrors } = profileData;
-  const authState: AuthState = useSelector((state: RootState) => state.auth);
   const [openAlert, setOpenAlert] = useState(false);
-  const { accessToken } = authState;
 
   useEffect(() => {
     async function fetchData() {
-      if (accessToken) {
-        const data = await getUserByToken(accessToken);
-        setProfileData((prev) => {
-          return {
-            ...prev,
-            data: {
-              email: data.email as string,
-              firstName: "",
-              lastName: "",
-            }
+      const data = await getUserByToken();
+      setProfileData((prev) => {
+        return {
+          ...prev,
+          data: {
+            email: data.email as string,
+            firstName: "",
+            lastName: "",
           }
-        });
-      }
+        }
+      });
     }
     fetchData();
-  }, [accessToken]);
+  }, []);
 
   async function submitHandler(formData: FormData) {
     const errors: Error = { ...DEFAULT_ERROR };
