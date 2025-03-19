@@ -1,7 +1,8 @@
 import MainHeader from "@/components/share/MainHeader";
 import classes from "./layout.module.css";
 import Container from "@/components/ui/Container";
-import AuthAlert from "./alert";
+import CustomAlert from "@/components/ui/CustomAlert";
+import AuthLoading from "./loading";
 
 export default function AuthLayout({
   children,
@@ -9,7 +10,8 @@ export default function AuthLayout({
   return (
     <>
       <div className={classes["background-signin"]}></div>
-      <AuthAlert />
+      <CustomAlert />
+      <AuthLoading />
       <MainHeader isTransparent={true} isShowBar={false} />
       <Container>{children}</Container>
     </>

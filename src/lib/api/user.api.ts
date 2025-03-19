@@ -1,7 +1,7 @@
 import { supabaseClient } from "@/lib/utils/supabase";
 import { ERROR_MSG } from "@/lib/constant/error";
 
-async function getUserByToken() {
+async function getCurrentUser() {
   const response = await supabaseClient?.auth.getSession();
   if (!response) {
     throw new Error(ERROR_MSG.no_response);
@@ -12,13 +12,16 @@ async function getUserByToken() {
     throw new Error(error.message);
   }
 
-  return data.session?.user;
+  const user = data.session?.user;
+  if (!user) {
+    throw new Error(ERROR_MSG.failed_auth);
+  }
+
+  return user;
 }
 
 async function getUserInfo() {
-  const sessionResponse = await supabaseClient?.auth.getSession();
-  const user = sessionResponse?.data.session?.user;
-  if (!user) return;
+  const user = await getCurrentUser();
 
   const profileResponse = await supabaseClient
     ?.from("profiles")
@@ -39,4 +42,32 @@ async function getUserInfo() {
   };
 }
 
-export { getUserByToken, getUserInfo };
+async function updateUserInfo({
+  firstName,
+  lastName,
+  dateOfBirth,
+  phoneNumber,
+}: {
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string | null;
+  phoneNumber: string | null;
+}) {
+  const user = await getCurrentUser();
+
+  const response = await supabaseClient
+    ?.from("profiles")
+    .update({
+      first_name: firstName,
+      last_name: lastName,
+      date_of_birth: dateOfBirth,
+      phone_number: phoneNumber,
+    })
+    .eq("id", user.id);
+
+  if (response?.status !== 204) {
+    throw new Error(ERROR_MSG.update_failed);
+  }
+}
+
+export { getCurrentUser, getUserInfo, updateUserInfo };

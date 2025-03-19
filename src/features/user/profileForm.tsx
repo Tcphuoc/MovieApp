@@ -3,17 +3,20 @@
 import { useEffect, useState } from "react";
 import { ERROR_MSG } from "@/lib/constant/error";
 
-import { getUserInfo } from "@/lib/api/user.api";
+import { getUserInfo, updateUserInfo } from "@/lib/api/user.api";
 import CustomButton from "@/components/ui/CustomButton";
 import Input from "@/components/ui/CustomInput";
 import CustomDatePicker from "@/components/ui/CustomDatePicker";
+import { useDispatch } from "react-redux";
+import { closeLoading, openLoading } from "@/store/loadingSlice";
 import dayjs from "dayjs";
+import { showAlertAction } from "@/store/alertSlice";
 
 interface Data {
   firstName: string;
   lastName: string;
-  dateOfBirth?: string;
-  phoneNumber?: string;
+  dateOfBirth: string | null;
+  phoneNumber: string | null;
 }
 
 interface Error {
@@ -32,6 +35,8 @@ interface FormProps {
 const DEFAULT_DATA = {
   firstName: "",
   lastName: "",
+  phoneNumber: "",
+  dateOfBirth: null,
 };
 
 const DEFAULT_ERROR = {
@@ -51,35 +56,50 @@ export default function ProfileForm() {
   const [profileData, setProfileData] =
     useState<FormProps>(DEFAULT_PROFILE_FORM);
   const { data: formData, errors: formErrors } = profileData;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await getUserInfo();
-      if (!data) return;
+    dispatch(openLoading());
+    getUserInfo()
+      .then((data) => {
+        if (!data) return;
 
-      setProfileData((prev) => {
-        return { ...prev, data };
+        setProfileData((prev) => {
+          return { ...prev, data };
+        });
+      })
+      .catch((error) => {
+        console.error(error.message);
+        dispatch(showAlertAction({ type: "error", content: error.message }));
+      })
+      .finally(() => {
+        dispatch(closeLoading());
       });
-    }
-    fetchData();
-  }, []);
+  }, [dispatch]);
 
   async function submitHandler(formData: FormData) {
     const errors: Error = { ...DEFAULT_ERROR };
     const data: Data = {
       firstName: formData.get("first_name") as string,
       lastName: formData.get("last_name") as string,
-      dateOfBirth: formData.get("date_of_birth") as string,
-      phoneNumber: formData.get("phone_number") as string,
+      dateOfBirth: formData.get("date_of_birth") as string | null,
+      phoneNumber: formData.get("phone_number") as string | null,
     };
 
     if (data.firstName.length === 0) {
       errors.firstNameError = ERROR_MSG.first_name;
     }
 
-    data.lastName = formData.get("last_name") as string;
     if (data.lastName.length === 0) {
       errors.lastNameError = ERROR_MSG.last_name;
+    }
+
+    if (dayjs(data.dateOfBirth).isAfter(dayjs())) {
+      errors.dateOfBirthError = ERROR_MSG.invalid_date_future;
+    }
+
+    if (data.phoneNumber && data.phoneNumber.length !== 10) {
+      errors.phoneNumberError = ERROR_MSG.phoneNumber;
     }
 
     setProfileData({ data, errors });
@@ -90,6 +110,21 @@ export default function ProfileForm() {
       errors.phoneNumberError
     ) {
       return;
+    }
+
+    try {
+      await updateUserInfo(data);
+      dispatch(
+        showAlertAction({
+          type: "success",
+          content: "Update user info success",
+        })
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        dispatch(showAlertAction({ type: "error", content: error.message }));
+      }
     }
   }
 
@@ -134,7 +169,20 @@ export default function ProfileForm() {
         />
         <CustomDatePicker
           disableFuture={true}
-          defaultValue={dayjs(formData.dateOfBirth)}
+          defaultValue={formData.dateOfBirth ?? ""}
+          errorMessage={formErrors.dateOfBirthError}
+          label="Date of birth"
+          name="date_of_birth"
+        />
+        <Input
+          label="Phone number"
+          id="phone_number"
+          type="text"
+          className="my-5 w-full"
+          error={!!formErrors.phoneNumberError}
+          value={formData.phoneNumber}
+          helperText={formErrors.phoneNumberError}
+          onChange={(event) => changeHandler(event, "phoneNumber")}
         />
         <div className="w-full flex justify-end">
           <CustomButton className="btn-primary mb-5" type="submit">

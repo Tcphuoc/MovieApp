@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { setCookie, deleteCookie, getCookie } from "cookies-next";
-import { getUserByToken } from "../lib/api/user.api";
+import { getCurrentUser } from "../lib/api/user.api";
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -31,7 +31,7 @@ export const loadUserFromLocalAction = createAsyncThunk(
       const accessToken = await getCookie("accessToken");
       if (!accessToken) return { accessToken: null };
 
-      const user = await getUserByToken();
+      const user = await getCurrentUser();
       return { accessToken, currentUserId: user?.id };
     } catch (error: unknown) {
       if (error instanceof Error) {
