@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signup } from "@/lib/api/auth.api";
@@ -122,71 +121,57 @@ export default function SignupPage() {
   }
 
   return (
-    <section>
-      <div className="bg-black w-130 py-15 px-20 mx-auto rounded-md">
-        <h2 className="font-bold">Sign Up</h2>
-        <form action={authHandler}>
-          <div className="flex justify-between my-5">
-            <Input
-              label="First name"
-              id="first_name"
-              type="text"
-              className="w-42"
-              error={!!authData.errors.firstNameError}
-              defaultValue={authData.data.firstName}
-              helperText={authData.errors.firstNameError}
-            />
-            <Input
-              label="Last name"
-              id="last_name"
-              type="text"
-              className="w-42"
-              error={!!authData.errors.lastNameError}
-              defaultValue={authData.data.lastName}
-              helperText={authData.errors.lastNameError}
-            />
-          </div>
-          <Input
-            label="Email"
-            id="email"
-            type="text"
-            className="mt-5 w-full"
-            error={!!authData.errors.emailError}
-            defaultValue={authData.data.email}
-            helperText={authData.errors.emailError}
-          />
-          <Input
-            label="Password"
-            id="password"
-            type="password"
-            className="my-5"
-            error={!!authData.errors.passwordError}
-            defaultValue={authData.data.password}
-            helperText={authData.errors.passwordError}
-          />
-          <Input
-            label="Password Confirmation"
-            id="password_confirm"
-            type="password"
-            className="my-5"
-            error={!!authData.errors.passwordConfirmError}
-            defaultValue={authData.data.passwordConfirm}
-            helperText={authData.errors.passwordConfirmError}
-          />
-          <CustomButton className="btn-primary w-full mb-5" type="submit">
-            Sign up
-          </CustomButton>
-        </form>
-        <div className="flex">
-          <p>Have an exist email?</p>
-          <Link
-            className="font-bold text-white ml-2 hover:underline"
-            href="/signin"
-          >
-            Sign in.
-          </Link>
-        </div>
+    <form action={authHandler}>
+      <div className="flex justify-between my-5">
+        <Input
+          label="First name"
+          id="first_name"
+          type="text"
+          className="w-42"
+          error={!!authData.errors.firstNameError}
+          defaultValue={authData.data.firstName}
+          helperText={authData.errors.firstNameError}
+        />
+        <Input
+          label="Last name"
+          id="last_name"
+          type="text"
+          className="w-42"
+          error={!!authData.errors.lastNameError}
+          defaultValue={authData.data.lastName}
+          helperText={authData.errors.lastNameError}
+        />
       </div>
-    </section>
+      <Input
+        label="Email"
+        id="email"
+        type="text"
+        className="mt-5 w-full"
+        error={!!authData.errors.emailError}
+        defaultValue={authData.data.email}
+        helperText={authData.errors.emailError}
+      />
+      <Input
+        label="Password"
+        id="password"
+        type="password"
+        className="my-5"
+        error={!!authData.errors.passwordError}
+        defaultValue={authData.data.password}
+        helperText={authData.errors.passwordError}
+      />
+      <Input
+        label="Password Confirmation"
+        id="password_confirm"
+        type="password"
+        className="my-5"
+        error={!!authData.errors.passwordConfirmError}
+        defaultValue={authData.data.passwordConfirm}
+        helperText={authData.errors.passwordConfirmError}
+      />
+      <CustomButton className="btn-primary w-full mb-5" type="submit">
+        Sign up
+      </CustomButton>
+    </form>
   );
 }

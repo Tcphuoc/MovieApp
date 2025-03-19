@@ -24,7 +24,6 @@ interface Error {
   lastNameError: string;
   dateOfBirthError: string;
   phoneNumberError: string;
-  apiError: string;
 }
 
 interface FormProps {
@@ -44,7 +43,6 @@ const DEFAULT_ERROR = {
   lastNameError: "",
   dateOfBirthError: "",
   phoneNumberError: "",
-  apiError: "",
 };
 
 const DEFAULT_PROFILE_FORM: FormProps = {
@@ -144,52 +142,49 @@ export default function ProfileForm() {
   }
 
   return (
-    <div className="bg-black w-full px-30 py-10 mx-auto rounded-md">
-      <h2 className="font-bold">Update profile</h2>
-      <form action={submitHandler}>
-        <Input
-          label="First name"
-          id="first_name"
-          type="text"
-          className="my-5 w-full"
-          error={!!formErrors.firstNameError}
-          value={formData.firstName}
-          helperText={formErrors.firstNameError}
-          onChange={(event) => changeHandler(event, "firstName")}
-        />
-        <Input
-          label="Last name"
-          id="last_name"
-          type="text"
-          className="my-5 w-full"
-          error={!!formErrors.lastNameError}
-          value={formData.lastName}
-          helperText={formErrors.lastNameError}
-          onChange={(event) => changeHandler(event, "lastName")}
-        />
-        <CustomDatePicker
-          disableFuture={true}
-          defaultValue={formData.dateOfBirth ?? ""}
-          errorMessage={formErrors.dateOfBirthError}
-          label="Date of birth"
-          name="date_of_birth"
-        />
-        <Input
-          label="Phone number"
-          id="phone_number"
-          type="text"
-          className="my-5 w-full"
-          error={!!formErrors.phoneNumberError}
-          value={formData.phoneNumber}
-          helperText={formErrors.phoneNumberError}
-          onChange={(event) => changeHandler(event, "phoneNumber")}
-        />
-        <div className="w-full flex justify-end">
-          <CustomButton className="btn-primary mb-5" type="submit">
-            Save
-          </CustomButton>
-        </div>
-      </form>
-    </div>
+    <form action={submitHandler}>
+      <Input
+        label="First name"
+        id="first_name"
+        type="text"
+        className="my-5 w-full"
+        error={!!formErrors.firstNameError}
+        value={formData.firstName}
+        helperText={formErrors.firstNameError}
+        onChange={(event) => changeHandler(event, "firstName")}
+      />
+      <Input
+        label="Last name"
+        id="last_name"
+        type="text"
+        className="my-5 w-full"
+        error={!!formErrors.lastNameError}
+        value={formData.lastName}
+        helperText={formErrors.lastNameError}
+        onChange={(event) => changeHandler(event, "lastName")}
+      />
+      <CustomDatePicker
+        disableFuture={true}
+        defaultValue={formData.dateOfBirth ?? ""}
+        errorMessage={formErrors.dateOfBirthError}
+        label="Date of birth"
+        name="date_of_birth"
+      />
+      <Input
+        label="Phone number"
+        id="phone_number"
+        type="text"
+        className="my-5 w-full"
+        error={!!formErrors.phoneNumberError}
+        value={formData.phoneNumber}
+        helperText={formErrors.phoneNumberError}
+        onChange={(event) => changeHandler(event, "phoneNumber")}
+      />
+      <div className="w-full flex justify-end">
+        <CustomButton className="btn-primary mb-5" type="submit">
+          Save
+        </CustomButton>
+      </div>
+    </form>
   );
 }

@@ -13,7 +13,11 @@ export default function AuthLayout({
       <CustomAlert />
       <AuthLoading />
       <MainHeader isTransparent={true} isShowBar={false} />
-      <Container>{children}</Container>
+      <Container>
+        <div className="bg-black w-130 py-15 px-20 mx-auto rounded-md">
+          {children}
+        </div>
+      </Container>
     </>
   );
 }

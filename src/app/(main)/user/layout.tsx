@@ -14,7 +14,9 @@ export default function MainLayout({
   return (
     <div className="flex">
       <AccountNavbar className="mr-10" />
-      {children}
+      <div className="bg-black w-full px-30 py-10 mx-auto rounded-md">
+        {children}
+      </div>
     </div>
   );
 }

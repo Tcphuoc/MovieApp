@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signin } from "@/lib/api/auth.api";
@@ -87,46 +86,32 @@ export default function SigninForm() {
   }
 
   return (
-    <section>
-      <div className="bg-black w-130 py-15 px-20 mx-auto rounded-md">
-        <h2 className="font-bold">Sign In</h2>
-        <form action={authHandler}>
-          <Input
-            label="Email"
-            id="email"
-            type="text"
-            className="mt-5 w-full"
-            error={!!authData.errors.emailError}
-            defaultValue={authData.data.email}
-            helperText={authData.errors.emailError}
-          />
-          <Input
-            label="Password"
-            id="password"
-            type="password"
-            className="my-5"
-            error={!!authData.errors.passwordError}
-            defaultValue={authData.data.password}
-            helperText={authData.errors.passwordError}
-          />
-          <CustomButton
-            className="btn-primary w-full mb-5"
-            variant="contained"
-            type="submit"
-          >
-            Sign in
-          </CustomButton>
-        </form>
-        <div className="flex">
-          <p>New to Movie App?</p>
-          <Link
-            className="font-bold text-white ml-2 hover:underline"
-            href="/signup"
-          >
-            Sign up now.
-          </Link>
-        </div>
-      </div>
-    </section>
+    <form action={authHandler}>
+      <Input
+        label="Email"
+        id="email"
+        type="text"
+        className="mt-5 w-full"
+        error={!!authData.errors.emailError}
+        defaultValue={authData.data.email}
+        helperText={authData.errors.emailError}
+      />
+      <Input
+        label="Password"
+        id="password"
+        type="password"
+        className="my-5"
+        error={!!authData.errors.passwordError}
+        defaultValue={authData.data.password}
+        helperText={authData.errors.passwordError}
+      />
+      <CustomButton
+        className="btn-primary w-full mb-5"
+        variant="contained"
+        type="submit"
+      >
+        Sign in
+      </CustomButton>
+    </form>
   );
 }

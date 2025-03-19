@@ -6,7 +6,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { Info, Lock, Logout, Settings } from "@mui/icons-material";
+import { Info, Lock, Logout } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "@/store/authSlice";
@@ -47,11 +47,6 @@ export default function AccountNavbar({ className }: { className: string }) {
       name: "Update password",
       icon: <Lock sx={{ color: "white" }} />,
       path: "/user/password",
-    },
-    {
-      name: "Edit settings",
-      icon: <Settings sx={{ color: "white" }} />,
-      path: "/user/settings",
     },
     {
       name: "Logout",

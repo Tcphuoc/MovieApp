@@ -1,5 +1,6 @@
 import { supabaseClient } from "@/lib/utils/supabase";
 import { ERROR_MSG } from "@/lib/constant/error";
+import { signin } from "./auth.api";
 
 async function getCurrentUser() {
   const response = await supabaseClient?.auth.getSession();
@@ -70,4 +71,30 @@ async function updateUserInfo({
   }
 }
 
-export { getCurrentUser, getUserInfo, updateUserInfo };
+async function updateUserPassword({
+  password,
+  newPassword,
+}: {
+  password: string;
+  newPassword: string;
+}) {
+  const user = await getCurrentUser();
+  await signin({
+    email: user.email as string,
+    password: password,
+  });
+
+  const response = await supabaseClient?.auth.updateUser({
+    password: newPassword,
+  });
+  if (!response) throw new Error(ERROR_MSG.no_response);
+
+  const { data, error } = response;
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export { getCurrentUser, getUserInfo, updateUserInfo, updateUserPassword };

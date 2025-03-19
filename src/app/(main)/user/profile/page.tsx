@@ -1,5 +1,8 @@
 import ProfileForm from "@/features/user/ProfileForm";
 
 export default function ProfilePage() {
-  return <ProfileForm />;
+  return <>
+    <h2 className="font-bold">Update profile</h2>
+    <ProfileForm />
+  </>
 }

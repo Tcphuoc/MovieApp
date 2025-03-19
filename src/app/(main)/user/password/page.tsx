@@ -1,3 +1,10 @@
+import UpdatePasswordForm from "@/features/user/UpdatePasswordForm";
+
 export default function UpdatePasswordPage() {
-  return <h1>Update password</h1>;
+  return (
+    <>
+      <h2 className="font-bold">Update password</h2>
+      <UpdatePasswordForm />
+    </>
+  );
 }
