@@ -1,24 +1,21 @@
-import { Alert } from "@mui/material";
-import { createPortal } from "react-dom";
+import { Alert, AlertColor } from "@mui/material";
 
 export default function CustomAlert({
   open,
   content,
-  targetId,
+  type,
   onClose,
 }: {
   open: boolean;
   content: string;
-  targetId: string;
+  type: AlertColor;
   onClose: () => void;
 }) {
   return (
-    open &&
-    createPortal(
-      <Alert severity="error" onClose={onClose}>
+    open && (
+      <Alert severity={type} onClose={onClose}>
         {content}
-      </Alert>,
-      document.getElementById(targetId) as HTMLElement
+      </Alert>
     )
   );
 }

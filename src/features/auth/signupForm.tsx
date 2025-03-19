@@ -3,30 +3,29 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { signup } from "@/lib/api/services/auth";
+import { signup } from "@/lib/api/auth.api";
 import { ERROR_MSG } from "@/lib/constant/error";
 import { useDispatch } from "react-redux";
-import { login } from "@/lib/store/authSlice";
+import { loginAction } from "@/store/authSlice";
 
-import Input from "@/components/ui/input";
-import CustomButton from "@/components/ui/customButton";
-import CustomAlert from "@/components/ui/customAlert";
+import Input from "@/components/ui/CustomInput";
+import CustomButton from "@/components/ui/CustomButton";
+import { showAlertAction } from "@/store/alertSlice";
 
 interface Data {
   email: string;
   password: string;
-  passwordConfirm?: string;
-  firstName?: string;
-  lastName?: string;
+  passwordConfirm: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface Error {
   emailError: string;
   passwordError: string;
-  passwordConfirmError?: string;
-  firstNameError?: string;
-  lastNameError?: string;
-  apiError: string;
+  passwordConfirmError: string;
+  firstNameError: string;
+  lastNameError: string;
 }
 
 interface FormProps {
@@ -48,7 +47,6 @@ const DEFAULT_ERROR = {
   passwordConfirmError: "",
   firstNameError: "",
   lastNameError: "",
-  apiError: "",
 };
 
 const DEFAULT_SIGNUP_FORM: FormProps = {
@@ -58,36 +56,36 @@ const DEFAULT_SIGNUP_FORM: FormProps = {
 
 export default function SignupPage() {
   const [authData, setAuthData] = useState<FormProps>(DEFAULT_SIGNUP_FORM);
-  const [showAlert, setShowAlert] = useState(false);
 
   const route = useRouter();
   const dispatch = useDispatch();
 
   async function authHandler(formData: FormData) {
     const errors: Error = { ...DEFAULT_ERROR };
-    const data: Data = { ...DEFAULT_DATA };
+    const data: Data = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+      passwordConfirm: formData.get("password_confirm") as string,
+      firstName: formData.get("first_name") as string,
+      lastName: formData.get("last_name") as string,
+    };
 
-    data.email = formData.get("email") as string;
     if (data.email.length === 0) {
       errors.emailError = ERROR_MSG.email;
     }
 
-    data.password = formData.get("password") as string;
     if (data.password.length < 6 || data.password.length > 60) {
       errors.passwordError = ERROR_MSG.password;
     }
 
-    data.passwordConfirm = formData.get("password_confirm") as string;
     if (data.password && data.passwordConfirm !== data.password) {
       errors.passwordConfirmError = ERROR_MSG.password_confirm;
     }
 
-    data.firstName = formData.get("first_name") as string;
     if (data.firstName.length === 0) {
       errors.firstNameError = ERROR_MSG.first_name;
     }
 
-    data.lastName = formData.get("last_name") as string;
     if (data.lastName.length === 0) {
       errors.lastNameError = ERROR_MSG.last_name;
     }
@@ -99,15 +97,16 @@ export default function SignupPage() {
       errors.emailError ||
       errors.passwordError ||
       errors.passwordConfirmError
-    )
+    ) {
       return;
+    }
 
     try {
       const { user, session } = await signup(data);
       if (!session || !user) throw new Error(ERROR_MSG.failed_signup);
 
       dispatch(
-        login({
+        loginAction({
           accessToken: session.access_token,
           expiredTime: session.expires_in,
           id: user.id,
@@ -117,28 +116,13 @@ export default function SignupPage() {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);
-        setShowAlert(true);
-        setAuthData((prev) => {
-          return {
-            ...prev,
-            errors: {
-              ...prev.errors,
-              apiError: error.message,
-            },
-          };
-        });
+        dispatch(showAlertAction({ type: "error", content: error.message }));
       }
     }
   }
 
   return (
     <section>
-      <CustomAlert
-        open={showAlert}
-        content={authData.errors.apiError}
-        targetId="auth_alert"
-        onClose={() => setShowAlert(false)}
-      />
       <div className="bg-black w-130 py-15 px-20 mx-auto rounded-md">
         <h2 className="font-bold">Sign Up</h2>
         <form action={authHandler}>

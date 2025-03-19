@@ -22,7 +22,14 @@ const WhiteTextField = styled(TextField)({
 });
 
 export default function CustomInput({ className, ...props }: TextFieldProps) {
-  return <div className={className}>
-    <WhiteTextField {...props} name={props.id} className="w-full" variant="outlined" />
-  </div>
+  return (
+    <div className={className}>
+      <WhiteTextField
+        {...props}
+        name={props.id}
+        className="w-full"
+        variant="outlined"
+      />
+    </div>
+  );
 }

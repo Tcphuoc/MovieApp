@@ -1,14 +1,17 @@
-import MainHeader from "@/components/share/mainHeader";
+import MainHeader from "@/components/share/MainHeader";
 import classes from "./layout.module.css";
-import Container from "@/components/ui/container";
+import Container from "@/components/ui/Container";
+import AuthAlert from "./alert";
 
-export default function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <>
-    <div className={classes["background-signin"]}></div>
-    <div id="auth_alert"></div>
-    <MainHeader isTransparent={true} isShowBar={false} />
-    <Container>
-      {children}
-    </Container>
-  </>
+export default function AuthLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <>
+      <div className={classes["background-signin"]}></div>
+      <AuthAlert />
+      <MainHeader isTransparent={true} isShowBar={false} />
+      <Container>{children}</Container>
+    </>
+  );
 }
