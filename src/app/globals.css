@@ -5,6 +5,7 @@
   --foreground: #ffffff;
   --primary-color: #e50914;
   --full-height: calc(100vh + 100px);
+  --hover-color: #C11119;
 }
 
 @theme inline {
@@ -47,12 +48,15 @@ h4 {
   color: var(--primary-color);
 }
 
-.btn-primary {
-  color: var(--foreground);
-  background-color: var(--primary-color);
+.btn-primary button {
+  background-color: var(--primary-color) !important;
   &:hover {
-    background-color: #C11119;
+    background-color: #C11119 !important;
   }
+}
+
+.bg-default {
+  background-color: #141414;
 }
 
 .bg-red {
