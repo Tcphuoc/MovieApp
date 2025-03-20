@@ -13,7 +13,8 @@ import Dropdown from "@/components/ui/Dropdown";
 import { Logout, Person, Notifications, Search } from "@mui/icons-material";
 import { logoutAction } from "@/store/authSlice";
 import { logout } from "@/lib/api/auth.api";
-import { showAlertAction } from "@/store/alertSlice";
+import errorHandler from "@/lib/utils/errorHandler";
+import { mainNavigationItems } from "@/lib/constant/navigation";
 
 interface MainHeaderProps {
   isTransparent: boolean;
@@ -35,10 +36,7 @@ export default function MainHeader({
       await logout();
       dispatch(logoutAction());
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        dispatch(showAlertAction({ content: error.message, type: "error" }));
-      }
+      errorHandler(error, dispatch);
     }
   }
 
@@ -76,27 +74,19 @@ export default function MainHeader({
             <h3>Movie App</h3>
           </Link>
           {isShow && (
-            <ul>
-              <li>
-                <Link className={`hover:text-gray-200 mr-4`} href="/">
-                  Home
-                </Link>
-                <Link className={`hover:text-gray-200 mr-4`} href="/">
-                  TV Shows
-                </Link>
-                <Link className={`hover:text-gray-200 mr-4`} href="/">
-                  Movies
-                </Link>
-                <Link className={`hover:text-gray-200 mr-4`} href="/">
-                  New & Popular
-                </Link>
-                <Link className={`hover:text-gray-200 mr-4`} href="/">
-                  My List
-                </Link>
-                <Link className={`hover:text-gray-200 mr-4`} href="/">
-                  Browse by Languages
-                </Link>
-              </li>
+            <ul className="flex">
+              {mainNavigationItems.map(({ label, href }, index) => {
+                return (
+                  <li key={index}>
+                    <Link
+                      className={`hover:text-gray-200 mr-4`}
+                      href={href as string}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

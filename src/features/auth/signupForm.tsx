@@ -9,7 +9,7 @@ import { loginAction } from "@/store/authSlice";
 
 import Input from "@/components/ui/CustomInput";
 import CustomButton from "@/components/ui/CustomButton";
-import { showAlertAction } from "@/store/alertSlice";
+import errorHandler from "@/lib/utils/errorHandler";
 
 interface Data {
   email: string;
@@ -113,10 +113,7 @@ export default function SignupPage() {
       );
       route.push("/");
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        dispatch(showAlertAction({ type: "error", content: error.message }));
-      }
+      errorHandler(error, dispatch);
     }
   }
 
