@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 import { RootState } from "@/store";
 import logoImage from "@/app/icon.svg";
-import Container from "../ui/Container";
+import CustomContainer from "../ui/CustomContainer";
 import { AuthState } from "@/store/authSlice";
 import Dropdown from "@/components/ui/Dropdown";
 import { Logout, Person, Notifications, Search } from "@mui/icons-material";
@@ -58,7 +58,7 @@ export default function MainHeader({
   }, [isAuthenticated, isLoading, isShowBar]);
 
   return (
-    <Container className={isTransparent ? "bg-none" : "bg-default"}>
+    <CustomContainer className={isTransparent ? "bg-none" : "bg-default"}>
       <header className={"flex justify-between"}>
         <div className="flex items-center">
           <Link
@@ -121,6 +121,6 @@ export default function MainHeader({
           </ul>
         )}
       </header>
-    </Container>
+    </CustomContainer>
   );
 }

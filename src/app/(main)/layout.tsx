@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import MainHeader from "@/components/share/MainHeader";
 import AuthGuard from "@/components/share/AuthGuard";
-import Container from "@/components/ui/Container";
 import MainLoading from "./loading";
 import CustomAlert from "@/components/ui/CustomAlert";
+import CustomContainer from "@/components/ui/CustomContainer";
 
 export const metadata: Metadata = {
   title: "Home - Movie App",
@@ -20,7 +20,7 @@ export default function MainLayout({
       <CustomAlert />
       <MainLoading />
       <MainHeader isTransparent={false} isShowBar={true} />
-      <Container>{children}</Container>
+      <CustomContainer>{children}</CustomContainer>
     </AuthGuard>
   );
 }

@@ -1,4 +1,4 @@
-import ListAllMovie from "@/features/movie/ListAllMovie";
+import ListAllMovie from "./ListAllMovie";
 
 export default function Home() {
   return (

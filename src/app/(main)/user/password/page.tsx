@@ -1,4 +1,4 @@
-import UpdatePasswordForm from "@/features/user/UpdatePasswordForm";
+import UpdatePasswordForm from "@/app/(main)/user/password/UpdatePasswordForm";
 
 export default function UpdatePasswordPage() {
   return (

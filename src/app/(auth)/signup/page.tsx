@@ -1,4 +1,4 @@
-import SignupForm from "@/features/auth/SignupForm";
+import SignupForm from "@/app/(auth)/signup/SignupForm";
 import Link from "next/link";
 
 export default function SignupPage() {
