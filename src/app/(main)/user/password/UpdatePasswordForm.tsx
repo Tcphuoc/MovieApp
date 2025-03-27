@@ -8,6 +8,7 @@ import CustomButton from "@/components/ui/CustomButton";
 import Input from "@/components/ui/CustomInput";
 import { useDispatch } from "react-redux";
 import { showAlertAction } from "@/store/alertSlice";
+import errorHandler from "@/lib/utils/errorHandler";
 
 interface Data {
   password: string;
@@ -44,8 +45,9 @@ const DEFAULT_PASSWORD_FORM: FormProps = {
 };
 
 export default function UpdatePasswordForm() {
-  const [passwordData, setPasswordData] =
-    useState<FormProps>(DEFAULT_PASSWORD_FORM);
+  const [passwordData, setPasswordData] = useState<FormProps>(
+    DEFAULT_PASSWORD_FORM
+  );
   const { data: formData, errors: formErrors } = passwordData;
   const dispatch = useDispatch();
 
@@ -87,10 +89,7 @@ export default function UpdatePasswordForm() {
         })
       );
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        dispatch(showAlertAction({ type: "error", content: error.message }));
-      }
+      errorHandler(error, dispatch);
     }
   }
 

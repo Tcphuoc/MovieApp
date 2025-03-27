@@ -1,6 +1,6 @@
 import MainHeader from "@/components/share/MainHeader";
 import classes from "./layout.module.css";
-import Container from "@/components/ui/Container";
+import CustomContainer from "@/components/ui/CustomContainer";
 import CustomAlert from "@/components/ui/CustomAlert";
 import AuthLoading from "./loading";
 
@@ -13,11 +13,11 @@ export default function AuthLayout({
       <CustomAlert />
       <AuthLoading />
       <MainHeader isTransparent={true} isShowBar={false} />
-      <Container>
+      <CustomContainer>
         <div className="bg-black w-130 py-15 px-20 mx-auto rounded-md">
           {children}
         </div>
-      </Container>
+      </CustomContainer>
     </>
   );
 }

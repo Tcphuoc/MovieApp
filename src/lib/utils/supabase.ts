@@ -19,7 +19,11 @@ function createSupabaseClient(
 ) {
   if (!url || !anonKey) return;
 
-  return createClient(url, anonKey);
+  return createClient(url, anonKey, {
+    auth: {
+      autoRefreshToken: true,
+    },
+  });
 }
 
 export const supabaseAdmin = createSupabaseAdmin(

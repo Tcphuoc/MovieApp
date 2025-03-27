@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AccountNavbar from "@/features/user/AccountNavbar";
+import AccountNavbar from "./AccountNavbar";
 
 export const metadata: Metadata = {
   title: "Account - Movie App",

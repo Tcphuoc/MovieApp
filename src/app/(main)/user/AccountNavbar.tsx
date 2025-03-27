@@ -11,79 +11,63 @@ import { usePathname, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "@/store/authSlice";
 import { logout } from "@/lib/api/auth.api";
-import { showAlertAction } from "@/store/alertSlice";
+import errorHandler from "@/lib/utils/errorHandler";
+import { accountNavigationItems } from "@/lib/constant/navigation";
 
 export default function AccountNavbar({ className }: { className: string }) {
   const dispatch = useDispatch();
   const pathName: string = usePathname();
   const route = useRouter();
 
-  interface ItemProps {
-    name: string;
-    icon: React.ReactNode;
-    path: string;
-    action?: () => void;
-  }
-
   async function logoutHandler() {
     try {
       await logout();
       dispatch(logoutAction());
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        dispatch(showAlertAction({ content: error.message, type: "error" }));
-      }
+      errorHandler(error, dispatch);
     }
   }
 
-  const items: ItemProps[] = [
-    {
-      name: "Update profile",
-      icon: <Info sx={{ color: "white" }} />,
-      path: "/user/profile",
-    },
-    {
-      name: "Update password",
-      icon: <Lock sx={{ color: "white" }} />,
-      path: "/user/password",
-    },
-    {
-      name: "Logout",
-      icon: <Logout sx={{ color: "white" }} />,
-      path: "",
-      action: logoutHandler,
-    },
-  ];
+  const iconMap = {
+    info: <Info sx={{ color: "white" }} />,
+    lock: <Lock sx={{ color: "white" }} />,
+    logout: <Logout sx={{ color: "white" }} />,
+  };
 
-  function activeClass(path: string) {
+  function getIcon(iconType: string) {
+    if (!(iconType in iconMap)) return;
+
+    return iconMap[iconType as keyof typeof iconMap];
+  }
+
+  function activeBackground(path: string) {
     return path === pathName ? "var(--primary-color)" : "none";
   }
 
-  function handleClick(action: () => void, path: string) {
+  function handleClick(path: string) {
     if (path.length > 0) {
       route.replace(path);
     } else {
-      action();
+      logoutHandler();
     }
   }
 
   return (
     <div className={className}>
       <List>
-        {items.map(({ name, icon, path, action }, i) => {
+        {accountNavigationItems.map(({ label, icon, href }, i) => {
           return (
             <ListItemButton
               className="w-60"
               key={i}
               sx={{
                 ":hover": { backgroundColor: "var(--hover-color)" },
-                backgroundColor: activeClass(path),
+                backgroundColor: activeBackground(href),
               }}
-              onClick={() => handleClick(action as () => void, path)}
+              onClick={() => handleClick(href)}
             >
-              <ListItemIcon>{icon}</ListItemIcon>
-              <ListItemText>{name}</ListItemText>
+              <ListItemIcon>{getIcon(icon as string)}</ListItemIcon>
+              <ListItemText>{label}</ListItemText>
             </ListItemButton>
           );
         })}

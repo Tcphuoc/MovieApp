@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { closeLoading, openLoading } from "@/store/loadingSlice";
 import dayjs from "dayjs";
 import { showAlertAction } from "@/store/alertSlice";
+import errorHandler from "@/lib/utils/errorHandler";
 
 interface Data {
   firstName: string;
@@ -66,13 +67,8 @@ export default function ProfileForm() {
           return { ...prev, data };
         });
       })
-      .catch((error) => {
-        console.error(error.message);
-        dispatch(showAlertAction({ type: "error", content: error.message }));
-      })
-      .finally(() => {
-        dispatch(closeLoading());
-      });
+      .catch((error) => errorHandler(error, dispatch))
+      .finally(() => dispatch(closeLoading()));
   }, [dispatch]);
 
   async function submitHandler(formData: FormData) {
@@ -119,10 +115,7 @@ export default function ProfileForm() {
         })
       );
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        dispatch(showAlertAction({ type: "error", content: error.message }));
-      }
+      errorHandler(error, dispatch);
     }
   }
 
